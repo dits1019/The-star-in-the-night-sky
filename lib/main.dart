@@ -32,8 +32,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  Animation _animation;
+  late AnimationController _controller;
+  late Animation _animation;
   var random = Random();
 
   var leftPadding = 0.0;
@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage>
       padding: EdgeInsets.only(left: leftPadding, top: topPadding),
       // padding: EdgeInsets.all(60),
       child: FadeTransition(
-        opacity: _animation,
+        opacity: _animation as Animation<double>,
         // child: InkWell(
         //   onTap: (){},
         //   child: Hero(

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class PopUpItemBody extends StatelessWidget {
   const PopUpItemBody({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
