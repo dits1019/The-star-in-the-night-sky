@@ -32,25 +32,35 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
+  // animation
   late AnimationController _controller;
   late Animation _animation;
+
+  // random으로 위치 변경하기 위해서
   var random = Random();
 
+  // 왼쪽과 오른쪽 패딩에 랜덤값 부여
   var leftPadding = 0.0;
   var topPadding = 0.0;
 
   @override
   void initState() {
     super.initState();
+    // 애니메이션 실행
     _controller =
         AnimationController(vsync: this, duration: const Duration(seconds: 1))
+          // 애니메이션 반복
           ..repeat(reverse: true);
     _controller.addListener(() {
       this.setState(() {});
     });
+
+    // curve 추가
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
 
+    // 일정 시간 후 랜덤으로 패딩값 변경
     Timer.periodic(new Duration(seconds: 2), (timer) {
+      // 만약 랜덤값이 0이라면 1로 대체
       leftPadding = random.nextDouble() == 0.0
           ? 1.0
           : random.nextDouble() * MediaQuery.of(context).size.width.toInt();
@@ -70,33 +80,25 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // 확대와 축소가 가능한 Viewer
       body: InteractiveViewer(
         child: Stack(
           children: [space(), star()],
         ),
+        // 최소 축소
         minScale: 0.2,
+        // 최대 확대
         maxScale: 3.0,
       ),
     );
   }
 
+  // 랜덤 위치로 이동하는 별
   Widget star() {
     return Padding(
       padding: EdgeInsets.only(left: leftPadding, top: topPadding),
-      // padding: EdgeInsets.all(60),
       child: FadeTransition(
         opacity: _animation as Animation<double>,
-        // child: InkWell(
-        //   onTap: (){},
-        //   child: Hero(
-        //     tag: 'star',
-        //     child: Icon(
-        //       Icons.star,
-        //       color: Colors.white,
-        //       size: 100,
-        //     ),
-        //   ),
-        // ),
         child: PopupItemLauncher(
           tag: 'test',
           child: const Icon(
@@ -104,6 +106,7 @@ class _HomePageState extends State<HomePage>
             color: Colors.amber,
             size: 100,
           ),
+          // Dialog창 설정
           popUp: PopUpItem(
             padding: EdgeInsets.all(20),
             color: Colors.white,
@@ -118,11 +121,11 @@ class _HomePageState extends State<HomePage>
     );
   }
 
+  // 별 클릭 시 Dialog 표시
   void _showDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        // return object of type Dialog
         return AlertDialog(
           title: new Text("Alert Dialog title"),
           content: Hero(
@@ -133,7 +136,6 @@ class _HomePageState extends State<HomePage>
             ),
           ),
           actions: <Widget>[
-            // ignore: deprecated_member_use
             new FlatButton(
               child: new Text("Close"),
               onPressed: () {
@@ -146,6 +148,7 @@ class _HomePageState extends State<HomePage>
     );
   }
 
+  // 배경
   Widget space() {
     return Image.network(
       'https://cdn.pixabay.com/photo/2016/03/09/15/18/stars-1246590_1280.jpg',
